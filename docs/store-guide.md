@@ -6,7 +6,7 @@
 
 | 材料 | 位置 | 说明 |
 |---|---|---|
-| 正式签名 APK | `app/build/outputs/apk/release/app-release.apk` | 用 `清账猫-release.keystore` 签名 |
+| 正式签名 APK | `app/build/outputs/apk/release/app-release.apk` | 用 `qingzhangmao-release.keystore` 签名 |
 | 应用图标 512×512 | `assets/icon-512.png` | 各商店后台上传用 |
 | 手机截图（430×932） | `docs/screenshots/*.png` | 商店要求 3～5 张，已备 4 张 |
 | 应用介绍文案 | 见下文第三节 | 可直接复制 |
@@ -20,7 +20,7 @@
 1. **软件著作权证书（软著）或电子版权认证**
    - 中国版权保护中心登记，个人可办，费用约 250～300 元，周期 1～2 个月
    - 加急电子认证（如「电子版权认证证书」）约 3～7 个工作日，各商店均认可
-   - 证书上的软件名称建议：**清账猫债务管理软件 V1.0.0**（全称必须含「软件」二字和版本号）
+   - 证书上的软件名称建议：**清账猫债务管理软件 V1.0.1**（全称必须含「软件」二字和版本号）
 2. **工信部 ICP/App 备案**
    - 在你提交的第一个商店（建议华为或小米）后台发起，商店代为转交
    - 需要身份证 + 手机号 + 应用包名 `com.qingzhangmao.app`
@@ -86,5 +86,5 @@
    Actions 会自动构建并把 APK 和 macOS 包挂到 Releases
 
 > 注意：CI 上目前出的是 Debug 签名 APK。要在 Actions 出正式签名包，
-> 需把 `清账猫-release.keystore` 转 base64 存到仓库 Secrets（`KEYSTORE_BASE64`、
+> 需把 `qingzhangmao-release.keystore` 转 base64 存到仓库 Secrets（`KEYSTORE_BASE64`、
 > `KEYSTORE_PASSWORD`、`KEY_ALIAS`、`KEY_PASSWORD`），工作流已支持，收到即自动签名。
