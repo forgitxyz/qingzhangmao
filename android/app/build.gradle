@@ -1,0 +1,69 @@
+plugins {
+    id 'com.android.application'
+}
+
+def signingProps = null
+def ksPropsFile = file("${rootProject.projectDir}/keystore.properties")
+if (ksPropsFile.exists()) {
+    signingProps = new Properties()
+    // 用 UTF-8 Reader 加载，避免 Properties 默认 ISO-8859-1 造成路径乱码
+    ksPropsFile.newReader("UTF-8").withReader { signingProps.load(it) }
+} else if (System.getenv("QZM_KEYSTORE") != null) {
+    signingProps = new Properties()
+    signingProps.setProperty("storeFile", System.getenv("QZM_KEYSTORE"))
+    signingProps.setProperty("storePassword", System.getenv("QZM_STORE_PASSWORD"))
+    signingProps.setProperty("keyAlias", System.getenv("QZM_KEY_ALIAS"))
+    signingProps.setProperty("keyPassword", System.getenv("QZM_KEY_PASSWORD"))
+}
+def hasReleaseKey = signingProps != null
+
+android {
+    namespace 'com.qingzhangmao.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.qingzhangmao.app"
+        minSdk 23
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+        resourceConfigurations += ["zh"]
+    }
+
+    if (hasReleaseKey) {
+        signingConfigs {
+            release {
+                storeFile file(signingProps.getProperty("storeFile"))
+                storePassword signingProps.getProperty("storePassword")
+                keyAlias signingProps.getProperty("keyAlias")
+                keyPassword signingProps.getProperty("keyPassword")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasReleaseKey) signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+// 可选辅助任务：把 web/index.html 同步成 assets/app.html
+// assets/app.html 已提交入库，改动网页后跑一次它再构建即可
+tasks.register("syncWeb", Copy) {
+    from("${rootProject.projectDir}/../web/index.html")
+    into("${projectDir}/src/main/assets")
+    rename { "app.html" }
+}

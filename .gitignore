@@ -1,0 +1,23 @@
+# 构建产物
+android/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+macos/*.app/
+macos/QingZhangMao
+macos/AppIcon.icns
+macos/AppIcon.iconset/
+macos/makeicon
+
+# 系统
+.DS_Store
+*.swp
+*.log
+
+# 密钥（千万不要提交）
+*.jks
+*.keystore
+keystore.properties
+
+# 打包产物
+*.zip

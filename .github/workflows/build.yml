@@ -1,0 +1,119 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  android:
+    name: Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: 安装 Android SDK 组件
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          SDKMGR="$(ls -d "$SDK"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -1)"
+          if [ -z "$SDKMGR" ]; then echo "找不到 sdkmanager"; exit 0; fi
+          yes | "$SDKMGR" --licenses > /dev/null 2>&1 || true
+          "$SDKMGR" --install "platforms;android-34" "build-tools;34.0.0" 2>&1 | tail -5
+
+      - name: 编译 Debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: 还原签名文件
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "未配置 KEYSTORE_BASE64，跳过 Release 签名构建"
+            echo "HAS_KEYSTORE=false" >> "$GITHUB_ENV"
+          else
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "HAS_KEYSTORE=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: 编译 Release APK
+        if: env.HAS_KEYSTORE == 'true'
+        working-directory: android
+        env:
+          QZM_KEYSTORE: ${{ runner.temp }}/release.jks
+          QZM_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          QZM_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          QZM_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease --no-daemon --stacktrace
+
+      - name: 整理产物
+        run: |
+          mkdir -p dist
+          VER="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
+          [ -z "$VER" ] && VER="dev-$(git rev-parse --short HEAD)"
+          REL=android/app/build/outputs/apk/release/app-release.apk
+          DBG=android/app/build/outputs/apk/debug/app-debug.apk
+          if [ -f "$REL" ]; then
+            cp "$REL" "dist/qingzhangmao-$VER.apk"
+          elif [ -f "$DBG" ]; then
+            cp "$DBG" "dist/qingzhangmao-$VER-debug.apk"
+          fi
+          ls -lh dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qingzhangmao-apk
+          path: dist/*.apk
+
+      - name: 发布到 Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.apk
+          generate_release_notes: true
+
+  macos:
+    name: macOS App
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 编译并打包
+        working-directory: macos
+        env:
+          QZM_UNIVERSAL: "1"
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: 压缩
+        run: |
+          VER="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
+          [ -z "$VER" ] && VER="dev-$(git rev-parse --short HEAD)"
+          cd macos
+          ditto -c -k --sequesterRsrc --keepParent "清帐猫.app" "../qingzhangmao-$VER-macos.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qingzhangmao-macos
+          path: qingzhangmao-*.zip
+
+      - name: 发布到 Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: qingzhangmao-*.zip
+          generate_release_notes: true
