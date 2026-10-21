@@ -453,7 +453,7 @@ footer{margin-top:26px;text-align:center;font-size:11.5px;color:#4d5a68;line-hei
       </div>
       
       <div class="empty"><b>还没有登记生活刚需</b>
-        房租、水电、物业、猫生活费、人生活费——先算清楚"活下去要多少钱"，才知道每月能拿出多少还债
+        房租、水电、物业、生活费、其他——先算清楚"活下去要多少钱"，才知道每月能拿出多少还债
         <button class="btn primary sm" data-act="add-exp">+ 添加刚需项</button>
       </div>
     </div></section>
@@ -536,9 +536,9 @@ const STATUS_CLASS = {
 };
 const CATEGORY_ICON = {
   "房租": "房", "水电": "水", "物业": "物",
-  "猫生活费": "猫", "人生活费": "人", "其他": "他"
+  "生活费": "生", "其他": "他"
 };
-const CATEGORIES = ["房租", "水电", "物业", "猫生活费", "人生活费", "其他"];
+const CATEGORIES = ["房租", "水电", "物业", "生活费", "其他"];
 const TYPES = ["银行消费贷", "信用卡", "网贷", "亲友借款", "其他"];
 const STATUSES = ["未协商", "协商中", "已协商", "已结清"];
 
@@ -639,6 +639,11 @@ function load() {
       state.profile = Object.assign({ income: 0, name: "" }, d.profile || {});
       state.loans = Array.isArray(d.loans) ? d.loans : [];
       state.expenses = Array.isArray(d.expenses) ? d.expenses : [];
+      // 兼容旧分类名：早期版本用「猫生活费」「人生活费」
+      const LEGACY_CAT = { "猫生活费": "生活费", "人生活费": "其他" };
+      state.expenses.forEach((e) => {
+        if (e && LEGACY_CAT[e.category]) e.category = LEGACY_CAT[e.category];
+      });
       state.payments = Array.isArray(d.payments) ? d.payments : [];
     }
   } catch (e) {
@@ -1052,7 +1057,7 @@ function renderExpenses() {
   const body = state.expenses.length
     ? groups
     : `<div class="empty"><b>还没有登记生活刚需</b>
-        房租、水电、物业、猫生活费、人生活费——先算清楚"活下去要多少钱"，才知道每月能拿出多少还债
+        房租、水电、物业、生活费、其他——先算清楚"活下去要多少钱"，才知道每月能拿出多少还债
         <button class="btn primary sm" data-act="add-exp">+ 添加刚需项</button>
       </div>`;
 
@@ -1625,8 +1630,8 @@ $("#btn-sample").addEventListener("click", () => {
       { id: uid(), name: "房租", category: "房租", amount: 2800, note: "合租单间" },
       { id: uid(), name: "水电 + 燃气", category: "水电", amount: 200, note: "夏季会更高" },
       { id: uid(), name: "物业费", category: "物业", amount: 100, note: "" },
-      { id: uid(), name: "宠物开销", category: "猫生活费", amount: 260, note: "粮 + 砂" },
-      { id: uid(), name: "吃饭 + 通勤", category: "人生活费", amount: 1600, note: "自己做饭为主" }
+      { id: uid(), name: "宠物开销", category: "生活费", amount: 260, note: "粮 + 砂" },
+      { id: uid(), name: "吃饭 + 通勤", category: "其他", amount: 1600, note: "自己做饭为主" }
     ],
     payments: [
       { id: uid(), loanId: "", loanName: "示例银行 · 消费贷", amount: 900, date: today(), note: "按期还款" }
