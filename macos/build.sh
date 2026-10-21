@@ -54,11 +54,11 @@ echo "5/6 自检（空环境写入 → 再次启动读回）"
 if [ -n "$CI" ]; then
   echo "    CI 环境无窗口服务，跳过 GUI 自检"
 else
-  DATA_DIR="$HOME/Library/Application Support/$APP_NAME"
-  rm -rf "$DATA_DIR"
-  "$APP_NAME.app/Contents/MacOS/$APP_NAME" --selftest 2>/dev/null | grep SELFTEST || true
-  "$APP_NAME.app/Contents/MacOS/$APP_NAME" --selftest 2>/dev/null | grep SELFTEST || true
-  rm -rf "$DATA_DIR"
+  # 用临时 HOME 跑自检，绝不碰真实数据目录（避免首次启动迁移后误删账本）
+  TEST_HOME="$(mktemp -d)"
+  HOME="$TEST_HOME" "$APP_NAME.app/Contents/MacOS/$APP_NAME" --selftest 2>/dev/null | grep SELFTEST || true
+  HOME="$TEST_HOME" "$APP_NAME.app/Contents/MacOS/$APP_NAME" --selftest 2>/dev/null | grep SELFTEST || true
+  rm -rf "$TEST_HOME"
 fi
 
 echo "6/6 完成：$PWD/$APP_NAME.app"
