@@ -21,3 +21,9 @@ keystore.properties
 
 # 打包产物
 *.zip
+
+# 本地账本数据与导出备份（含真实债务信息，切勿提交）
+records.json
+backups/
+清账猫_*.json
+清帐猫_*.json
