@@ -1,13 +1,13 @@
-# 清帐猫 · 债务管理与还款计划
+# 清账猫 · 债务管理与还款计划
 
 > 一笔一笔还清，心里有数。一个**完全离线、不联网、不收集任何数据**的债务管理工具。
 
-清帐猫帮你把「欠了谁、多少钱、谈成什么、每月该还多少、活下去要花多少」摆在一张表上，
+清账猫帮你把「欠了谁、多少钱、谈成什么、每月该还多少、活下去要花多少」摆在一张表上，
 再用雪球法 / 雪崩法算出**到底还要还多久**。数据只存在你自己的设备里，不上传、不注册、不登录。
 
 ## 截图
 
-| 概览 | 债务台账 | 清帐计划 |
+| 概览 | 债务台账 | 清账计划 |
 |---|---|---|
 | ![概览](docs/screenshots/overview.png) | ![台账](docs/screenshots/loans.png) | ![计划](docs/screenshots/plan.png) |
 
@@ -32,7 +32,7 @@
 
 ### macOS
 
-到 [Releases](../../releases) 下载 `qingzhangmao-x.y.z-macos.zip`（Intel 与 Apple 芯片通用），解压后把 `清帐猫.app` 拖进「应用程序」。
+到 [Releases](../../releases) 下载 `qingzhangmao-x.y.z-macos.zip`（Intel 与 Apple 芯片通用），解压后把 `清账猫.app` 拖进「应用程序」。
 首次打开如提示「无法验证开发者」，右键点图标 → 打开，或到「系统设置 → 隐私与安全性」里放行。
 
 系统要求：macOS 12 及以上（Intel / Apple Silicon 均可自行编译）。
@@ -47,7 +47,7 @@
 | 平台 | 位置 | 说明 |
 |---|---|---|
 | Android | App 私有目录 `data/records.json` | 每次改动即时写盘；`data/backups/` 保留最近 30 份每日快照 |
-| macOS | `~/Library/Application Support/清帐猫/records.json` | 同上，菜单「数据」可一键打开目录 |
+| macOS | `~/Library/Application Support/清账猫/records.json` | 同上，菜单「数据」可一键打开目录 |
 | 网页 | 浏览器 localStorage | 清浏览器数据即丢 |
 
 - 卸载 App 会连同数据一起删除，**卸载前请先导出**。
@@ -67,7 +67,7 @@
 # Android：产出 android/app/build/outputs/apk/debug/app-debug.apk
 cd android && ./gradlew assembleDebug
 
-# macOS：产出 macos/清帐猫.app，加 --install 同时装到桌面
+# macOS：产出 macos/清账猫.app，加 --install 同时装到桌面
 cd macos && ./build.sh --install
 ```
 

@@ -2,7 +2,7 @@ import Cocoa
 import WebKit
 
 // ============================================================
-//  清帐猫 · macOS 原生外壳
+//  清账猫 · macOS 原生外壳
 //  WKWebView 装载打包好的 HTML，数据通过 JS 桥写入本机 JSON 文件
 // ============================================================
 
@@ -14,10 +14,11 @@ final class DataStore {
 
     init() {
         let base = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let newDir = base.appendingPathComponent("清帐猫", isDirectory: true)
+        let newDir = base.appendingPathComponent("清账猫", isDirectory: true)
         // 老版本数据自动迁移过来，不丢记录（按新旧顺序尝试）
+        // 注意：「清帐猫」是 1.0.0 的旧写法，改名后首次启动会自动搬过来
         if !fm.fileExists(atPath: newDir.path) {
-            for legacy in ["上岸账本", "DebtTracker"] {
+            for legacy in ["清帐猫", "上岸账本", "DebtTracker"] {
                 let oldDir = base.appendingPathComponent(legacy, isDirectory: true)
                 if fm.fileExists(atPath: oldDir.path) {
                     try? fm.moveItem(at: oldDir, to: newDir)
@@ -92,7 +93,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         window = NSWindow(contentRect: frame,
                           styleMask: [.titled, .closable, .miniaturizable, .resizable],
                           backing: .buffered, defer: false)
-        window.title = "清帐猫"
+        window.title = "清账猫"
         window.minSize = NSSize(width: 760, height: 560)
         window.delegate = self
         window.setFrameAutosaveName("DebtTrackerMain")
@@ -183,10 +184,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKSc
         let appItem = NSMenuItem()
         main.addItem(appItem)
         let appMenu = NSMenu()
-        appMenu.addItem(withTitle: "关于清帐猫", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
+        appMenu.addItem(withTitle: "关于清账猫", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "隐藏清帐猫", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
-        appMenu.addItem(withTitle: "退出清帐猫", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: "隐藏清账猫", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appMenu.addItem(withTitle: "退出清账猫", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appItem.submenu = appMenu
 
         // 编辑菜单（保证输入框快捷键可用）

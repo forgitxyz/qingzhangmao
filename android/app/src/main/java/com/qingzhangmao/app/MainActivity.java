@@ -17,7 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 /**
- * 清帐猫 Android 外壳。
+ * 清账猫 Android 外壳。
  * 界面是打包在 assets 里的单页应用，数据由 StoreBridge 落到 App 私有目录。
  */
 public class MainActivity extends Activity {

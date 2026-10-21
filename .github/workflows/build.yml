@@ -104,7 +104,7 @@ jobs:
           VER="$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//')"
           [ -z "$VER" ] && VER="dev-$(git rev-parse --short HEAD)"
           cd macos
-          ditto -c -k --sequesterRsrc --keepParent "清帐猫.app" "../qingzhangmao-$VER-macos.zip"
+          ditto -c -k --sequesterRsrc --keepParent "清账猫.app" "../qingzhangmao-$VER-macos.zip"
 
       - uses: actions/upload-artifact@v4
         with:

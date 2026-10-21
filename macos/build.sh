@@ -1,5 +1,5 @@
 #!/bin/bash
-# 清帐猫 · macOS 构建脚本
+# 清账猫 · macOS 构建脚本
 #
 #   ./build.sh            编译 + 组装 + 自检
 #   ./build.sh --install  以上全部，并覆盖安装到「桌面」
@@ -9,7 +9,7 @@
 set -e
 cd "$(dirname "$0")"
 
-APP_NAME="清帐猫"
+APP_NAME="清账猫"
 BIN_NAME="QingZhangMao"
 SRC_HTML="../web/index.html"
 ICON_PNG="../assets/icon-1024.png"

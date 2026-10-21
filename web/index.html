@@ -2,7 +2,7 @@
 <html lang="zh-CN"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>清帐猫 · 债务管理与还款计划</title>
+<title>清账猫 · 债务管理与还款计划</title>
 <style>
 :root{
   --bg:#0b0f14;
@@ -323,8 +323,8 @@ footer{margin-top:26px;text-align:center;font-size:11.5px;color:#4d5a68;line-hei
     <div class="brand">
       <div class="logo">猫</div>
       <div>
-        <h1>清帐猫</h1>
-        <p>债务台账 · 协商进度 · 生活刚需 · 清帐计划</p>
+        <h1>清账猫</h1>
+        <p>债务台账 · 协商进度 · 生活刚需 · 清账计划</p>
       </div>
     </div>
     <div class="actions">
@@ -376,7 +376,7 @@ footer{margin-top:26px;text-align:center;font-size:11.5px;color:#4d5a68;line-hei
     <button class="tab" data-tab="loans">贷款</button>
     <button class="tab" data-tab="expenses">生活刚需</button>
     <button class="tab" data-tab="payments">还款记录</button>
-    <button class="tab" data-tab="plan">清帐计划</button>
+    <button class="tab" data-tab="plan">清账计划</button>
   </nav>
 
   <section class="view active" id="view-overview">
@@ -475,7 +475,7 @@ footer{margin-top:26px;text-align:center;font-size:11.5px;color:#4d5a68;line-hei
     
   </section>
   <section class="view" id="view-plan"><div class="panel">
-      <div class="panel-head"><h2>清帐计划</h2></div>
+      <div class="panel-head"><h2>清账计划</h2></div>
       <div class="empty"><b>还没有在还的贷款</b>先登记贷款和生活刚需，这里会给出建议的还款顺序和结清时间表<button class="btn primary sm" data-act="add-loan">+ 添加贷款</button></div>
     </div></section>
 
@@ -1138,7 +1138,7 @@ function renderPayments() {
 }
 
 /* ============================================================
-   渲染 · 清帐计划
+   渲染 · 清账计划
    ============================================================ */
 let planStrategy = "snowball";
 let planExtra = 0;
@@ -1150,7 +1150,7 @@ function renderPlan() {
 
   if (!list.length) {
     el.innerHTML = `<div class="panel">
-      <div class="panel-head"><h2>清帐计划</h2></div>
+      <div class="panel-head"><h2>清账计划</h2></div>
       <div class="empty"><b>还没有在还的贷款</b>先登记贷款和生活刚需，这里会给出建议的还款顺序和结清时间表<button class="btn primary sm" data-act="add-loan">+ 添加贷款</button></div>
     </div>`;
     return;
@@ -1160,7 +1160,7 @@ function renderPlan() {
   el.innerHTML = `
     <div class="panel">
       <div class="panel-head">
-        <h2>清帐计划</h2>
+        <h2>清账计划</h2>
         <span class="hint">基于月收入 − 刚需 − 最低还款自动推算</span>
       </div>
 
@@ -1551,7 +1551,7 @@ function bindIncome() {
    ============================================================ */
 $("#btn-export").addEventListener("click", () => {
   const data = JSON.stringify(state, null, 2);
-  const fileName = `清帐猫_${today()}.json`;
+  const fileName = `清账猫_${today()}.json`;
   if (NATIVE && NATIVE.exportFile) {
     const where = NATIVE.exportFile(fileName, data);
     toast(where ? "已导出到 " + where : "导出失败，请检查存储权限");

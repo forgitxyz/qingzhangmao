@@ -125,12 +125,12 @@ public class StoreBridge {
     }
 
     /**
-     * 导出 JSON。Android 11+ 直接落到「下载/清帐猫/」，无需权限；
+     * 导出 JSON。Android 11+ 直接落到「下载/清账猫/」，无需权限；
      * 老系统退到 App 外部目录（文件管理器仍可访问）。
      */
     @JavascriptInterface
     public String saveExport(String name, String content) {
-        String safe = (name == null || name.trim().isEmpty()) ? "清帐猫备份.json" : name.replaceAll("[/\\\\:*?\"<>|]", "_");
+        String safe = (name == null || name.trim().isEmpty()) ? "清账猫备份.json" : name.replaceAll("[/\\\\:*?\"<>|]", "_");
         byte[] data = (content == null ? "" : content).getBytes(StandardCharsets.UTF_8);
         String where = "";
 
@@ -139,7 +139,7 @@ public class StoreBridge {
             ContentValues v = new ContentValues();
             v.put(MediaStore.Downloads.DISPLAY_NAME, safe);
             v.put(MediaStore.Downloads.MIME_TYPE, "application/json");
-            v.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/清帐猫");
+            v.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/清账猫");
             v.put(MediaStore.Downloads.IS_PENDING, 1);
             Uri uri = null;
             try {
@@ -151,7 +151,7 @@ public class StoreBridge {
                     v.clear();
                     v.put(MediaStore.Downloads.IS_PENDING, 0);
                     cr.update(uri, v, null, null);
-                    where = "下载/清帐猫/" + safe;
+                    where = "下载/清账猫/" + safe;
                 }
             } catch (Exception e) {
                 if (uri != null) cr.delete(uri, null, null);
